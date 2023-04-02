@@ -7,6 +7,8 @@ import type { RunTimeLayoutConfig } from 'umi';
 import { history, Link } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
+import type {RequestConfig} from "@@/plugin-request/request";
+import errorHandler from "@/util/errorHandle";
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -17,6 +19,7 @@ export const initialStateConfig = {
 };
 
 /**
+ * 运行时会最先运行这个方法，我们可以在这里进行一些初始化的操作
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
 export async function getInitialState(): Promise<{
@@ -49,6 +52,7 @@ export async function getInitialState(): Promise<{
   };
 }
 
+// 配置一些基础配置
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
@@ -105,3 +109,20 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     ...initialState?.settings,
   };
 };
+
+export const request: RequestConfig = {
+  credentials: 'include',
+  errorHandler,
+  // 自定义端口规范
+  errorConfig: {
+    adaptor: res => {
+      return {
+        success: res.code == '200',
+        data: res.data,
+        errorCode: res.code,
+        errorMessage: res.message,
+      };
+    },
+  },
+  middlewares: [],
+}

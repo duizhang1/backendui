@@ -43,9 +43,15 @@
     component: './TableList',
   },
   {
-    name: 'tests',
-    path: '/test',
-    component: './TestPage'
+    name: '权限控制',
+    path: '/rbacManage',
+    routes: [
+      {
+        name: '权限管理',
+        path: '/rbacManage/permissionManage',
+        component: './RbacManage/PermissionManage'
+      }
+    ]
   },
   {
     path: '/',
