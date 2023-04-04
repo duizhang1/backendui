@@ -17,7 +17,6 @@ import {login} from "@/services/ant-design-pro/admin";
 
 
 function Index() {
-  const [userLoginState, setUserLoginState] = useState({});
   const {initialState, setInitialState} = useModel('@@initialState');
 
   const intl = useIntl();
@@ -35,12 +34,13 @@ function Index() {
   const handleSubmit = async (values) => {
     try {
       // 登录
-      const msg = await login({...values});
-      if (msg.status === 'ok') {
+      const result = await login({...values});
+      if (result.code === '200'){
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
         });
+        localStorage.setItem('token',result.data.tokenHead + result.data.token)
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
         /** 此方法会跳转到 redirect 参数所在的位置 */
@@ -50,14 +50,10 @@ function Index() {
         history.push(redirect || '/');
         return;
       }
-      console.log(msg);
-      // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
     } catch (error) {
       console.log(error)
     }
   };
-  const {status, type: loginType} = userLoginState;
 
   return (
     <div className={styles.container}>

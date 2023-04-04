@@ -6,9 +6,10 @@ import { PageLoading, SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from 'umi';
 import { history, Link } from 'umi';
 import defaultSettings from '../config/defaultSettings';
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 import type {RequestConfig} from "@@/plugin-request/request";
-import errorHandler from "@/util/errorHandle";
+import errorHandler from "@/util/requestUtils/errorHandle";
+import {getCurrentAdmin} from "@/services/ant-design-pro/admin";
+import {authHeaderInterceptor} from "@/util/requestUtils/authHeadInceptor";
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -26,25 +27,32 @@ export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
   loading?: boolean;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchUserInfo?: () => Promise<any>;
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg = await queryCurrentUser();
-      return msg.data;
+      const result = await getCurrentAdmin();
+      return result.data;
     } catch (error) {
       history.push(loginPath);
     }
     return undefined;
   };
-  // 如果不是登录页面，执行
-  if (history.location.pathname !== loginPath) {
+  const token = localStorage.getItem('token');
+  if (token != null && token.length > 0){
     const currentUser = await fetchUserInfo();
+    if (history.location.pathname === loginPath){
+      history.push('/welcome')
+    }
     return {
       fetchUserInfo,
       currentUser,
       settings: defaultSettings,
     };
+  } else {
+    if (history.location.pathname !== loginPath){
+      history.push(loginPath)
+    }
   }
   return {
     fetchUserInfo,
@@ -59,7 +67,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
-      content: initialState?.currentUser?.name,
+      content: initialState?.currentUser?.username,
     },
     footerRender: () => <Footer />,
     onPageChange: () => {
@@ -114,6 +122,7 @@ export const request: RequestConfig = {
   credentials: 'include',
   errorHandler,
   // 自定义端口规范
+  requestInterceptors: [authHeaderInterceptor],
   errorConfig: {
     adaptor: res => {
       return {

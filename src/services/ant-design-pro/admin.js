@@ -11,3 +11,15 @@ export async function login(body,options) {
     ...(options || {}),
   });
 }
+
+/**  GET /api/admin/getCurrentAdmin   */
+export async function getCurrentAdmin(body,options) {
+  return request('/api/admin/getCurrentAdmin', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
