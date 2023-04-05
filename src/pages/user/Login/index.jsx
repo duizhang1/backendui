@@ -48,7 +48,6 @@ function Index() {
         const {query} = history.location;
         const {redirect} = query;
         history.push(redirect || '/');
-        return;
       }
     } catch (error) {
       console.log(error)
@@ -138,6 +137,6 @@ function Index() {
       <Footer/>
     </div>
   );
-};
+}
 
 export default Index;

@@ -43,14 +43,14 @@
     component: './TableList',
   },
   {
-    name: '权限控制',
-    path: '/rbacManage',
+    name: '系统管理',
+    path: '/systemManage',
     routes: [
       {
         name: '权限管理',
-        path: '/rbacManage/permissionManage',
-        component: './RbacManage/PermissionManage'
-      }
+        path: '/systemManage/permissionManage',
+        component: './SystemManage/PermissionManage'
+      },
     ]
   },
   {
