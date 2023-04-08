@@ -1,37 +1,28 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {
   ModalForm,
-  ProForm,
-  ProFormDateRangePicker, ProFormGroup,
+  ProFormGroup,
   ProFormSelect,
   ProFormText, ProFormTreeSelect,
 } from '@ant-design/pro-components';
-import { Button, Form, message, TreeSelect } from 'antd';
-import {getFatherPermissionTree} from "@/services/ant-design-pro/system";
+import { Button, Form, message } from 'antd';
+import {addPermission, getFatherPermissionTree} from "@/services/ant-design-pro/permission";
+import {permissionTypeEnum} from '@/enum/enum'
 
-export default function Index(){
-  const [value,setValue] = useState([])
-  const [treeData,setTreeData] = useState([])
+export default function Index(props){
+  const { tableActionRef } = props
   const [form] = Form.useForm();
-
-  useEffect(()=>{
-    getFatherPermissionTree().then(
-      values => {
-        setTreeData(values.data)
-      },
-      reason => {
-
-      }
-    )
-  },[])
-
-  const onChange = (e) =>{
-    setValue(e)
-  }
 
   return (
     <ModalForm
       title={"新增权限"}
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: ()=>{
+          form.resetFields()
+        },
+        maskClosable: false,
+      }}
       form={form}
       trigger={
         <Button type="primary">
@@ -39,20 +30,22 @@ export default function Index(){
         </Button>
       }
       autoFocusFirstInput
-      modalProps={{
-        destroyOnClose: true,
-      }}
       onFinish={async (values) => {
-        await waitTime(2000);
-        console.log(values.name);
-        message.success('提交成功');
-        return true;
+        const result = await addPermission(values)
+        console.log(result)
+        if (result.code === '200'){
+          message.info(result.message)
+          tableActionRef.current.reload()
+          return true
+        }
+        return false;
       }}
       >
       <ProFormGroup >
         <ProFormTreeSelect
           label={"父级菜单项"}
           name={'pid'}
+          dependencies={['type']}
           request={async () =>{
             const result = await getFatherPermissionTree()
             return result.data
@@ -62,19 +55,64 @@ export default function Index(){
               label: 'title',
             },
           }}
-          style={{
-            width: '100%',
-          }}
-          width={300}
-          // value={value}
-          // dropdownStyle={{
-          //   maxHeight: 400,
-          //   overflow: 'auto',
-          // }}
-          // placeholder="Please select"
-          // treeDefaultExpandAll
-          // treeData={treeData}
-          // onChange={onChange}
+          rules={[
+            ({getFieldValue}) => ({
+              validator(_,value) {
+                // 当选择功能时，需要选择对应的页面
+                if (getFieldValue('type') === '1' && (!value || value?.length === 0)){
+                  return Promise.reject(new Error('功能创建需要在对应的父级页面上'))
+                }
+                return Promise.resolve()
+              }
+            })
+          ]}
+          width="md"
+          allowClear
+        />
+        <ProFormText
+          width="md"
+          name="name"
+          label="权限名"
+          rules={[
+            {
+              required: true,
+              message: "请输入权限名"
+            }
+          ]}
+        />
+        <ProFormText
+          width="md"
+          name="value"
+          label="权限值"
+          rules={[
+            {
+              required: true,
+              message: "请输入权限值"
+            }
+          ]}
+        />
+        <ProFormSelect
+          width="md"
+          name="type"
+          label="类型"
+          valueEnum={permissionTypeEnum}
+          rules={[
+            {
+              required: true,
+              message: "请选择类型"
+            }
+          ]}
+          />
+        <ProFormText
+          width="md"
+          name="uri"
+          label="权限路径"
+          rules={[
+            {
+              required: true,
+              message: "请输入权限路径"
+            }
+          ]}
         />
       </ProFormGroup>
     </ModalForm>

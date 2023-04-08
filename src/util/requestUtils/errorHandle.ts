@@ -1,5 +1,5 @@
 
-import { notification } from 'antd';
+import {message} from 'antd';
 const codeMessage: Record<number, string> = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
@@ -34,19 +34,13 @@ interface error {
  */
 const errorHandler = (error: error) => {
   if(error.name==="BizError"){
-    notification.error({
-      message: `请求错误 ${error.data.code}`,
-      description: error.data.message,
-    });
+    message.error(error.data.message)
     return error.data;
   }
   const { response } = error;
   const errortext = codeMessage[response.status] || response.statusText;
   const { status, url } = response;
-  notification.error({
-    message: `请求错误 ${status}: ${url}`,
-    description: errortext,
-  });
+  message.error(`请求错误 ${status}: ${url} \n` + errortext)
 };
 
 export default errorHandler;

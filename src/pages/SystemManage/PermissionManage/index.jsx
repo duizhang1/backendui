@@ -1,8 +1,13 @@
 import React, {useState} from "react";
 import {ActionType, ProTable, PageContainer} from "@ant-design/pro-components";
-import {Button, Dropdown, Space, Tag, Table } from 'antd';
-import {EllipsisOutlined, PlusOutlined} from '@ant-design/icons';
-import {getPermissionData} from "@/services/ant-design-pro/system";
+import {Button, Dropdown, Space, Tag, Table, message,Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import {
+  deletePermission,
+  getPermissionData,
+  updateStatusDisAble,
+  updateStatusEnable
+} from "@/services/ant-design-pro/permission";
 import {useRef} from "react";
 import {FormattedMessage} from "@@/plugin-locale/localeExports";
 import {permissionTypeEnum, statusEnum} from "@/enum/enum";
@@ -10,7 +15,10 @@ import AddFormModal from './components/AddFormModal'
 
 
 export default function Index() {
+  const [modal, contextHolder] = Modal.useModal();
   const [selectedRows,setSelectedRows] = useState([])
+
+  const actionRef = useRef()
 
   const columns = [
     {
@@ -63,9 +71,73 @@ export default function Index() {
     }
   ]
 
+  const clickOnDelete = (e) =>{
+    if (selectedRows.length === 0){
+      message.error("请至少选择一条记录")
+      return
+    }
+    modal.confirm({
+      title: '确认',
+      icon: <ExclamationCircleOutlined />,
+      content: `确认删除这${selectedRows.length}条记录吗？`,
+      okText: '确认',
+      cancelText: '取消',
+      onOk: (e) =>{
+        const ids = selectedRows.map(item => {
+          return item.uuid
+        })
+        const params = {
+          ids
+        }
+        deletePermission(params).then(
+          value => {
+            actionRef.current.reload()
+            message.info(value.message)
+          },
+          reason => {
+            message.error(reason.message)
+          }
+        )
+      }
+    });
+  }
+
+  const clickOnEnable = (e) =>{
+    if (selectedRows.length === 0 || selectedRows.length > 1){
+      message.error("请选择一条记录")
+      return
+    }
+    updateStatusEnable({id: selectedRows[0].uuid}).then(
+      value => {
+        actionRef.current.reload()
+        message.info(value.message)
+      },
+      reason => {
+        message.error(reason.message)
+      }
+    )
+  }
+
+  const clickOnDisAble = (e) =>{
+    if (selectedRows.length === 0 || selectedRows.length > 1){
+      message.error("请选择一条记录")
+      return
+    }
+    updateStatusDisAble({id: selectedRows[0].uuid}).then(
+      value => {
+        actionRef.current.reload()
+        message.info(value.message)
+      },
+      reason => {
+        message.error(reason.message)
+      }
+    )
+  }
+
   return (
     <PageContainer>
       <ProTable
+        actionRef={actionRef}
         rowSelection={{
           onChange: (_, selectedRows) => {
             setSelectedRows(selectedRows);
@@ -87,9 +159,29 @@ export default function Index() {
         toolBarRender={() => [
           <AddFormModal
             key={'addPermission'}
+            tableActionRef={actionRef}
           />,
+          <Button
+            type={'primary'}
+            onClick={clickOnDelete}
+          >
+            删除
+          </Button>,
+          <Button
+            type={'primary'}
+            onClick={clickOnEnable}
+          >
+            生效
+          </Button>,
+          <Button
+            type={'primary'}
+            onClick={clickOnDisAble}
+          >
+            失效
+          </Button>,
         ]}
       />
+      {contextHolder}
     </PageContainer>
   )
 
