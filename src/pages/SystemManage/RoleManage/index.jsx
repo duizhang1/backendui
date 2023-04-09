@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import { ProTable, PageContainer } from "@ant-design/pro-components";
-import { Button, message, Modal } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import {
-  deletePermission,
-  getPermissionData,
-  updateStatusDisAble,
-  updateStatusEnable
-} from "@/services/ant-design-pro/permission";
-import {useRef} from "react";
-import {permissionTypeEnum, statusEnum} from "@/enum/enum";
-import AddFormModal from './components/AddFormModal'
+import {statusEnum} from "@/enum/enum";
+import {useRef, useState} from "react";
+import AddFormModal from "@/pages/SystemManage/RoleManage/components/AddFormModal";
+import EditFormModal from "@/pages/SystemManage/RoleManage/components/EditFormModal";
+import { Button, message, Modal } from "antd";
+import {ExclamationCircleOutlined} from "@ant-design/icons"
+import {deleteRole, getRoleData, updateStatusDisable, updateStatusEnable} from "@/services/ant-design-pro/role";
 
 
-export default function Index() {
-  const [modal, contextHolder] = Modal.useModal();
+export default function Index(){
   const [selectedRows,setSelectedRows] = useState([])
+  const [editOpen,setEditOpen] = useState(false)
+  const [editData,setEditData] = useState({});
+
+
+  const [modal, contextHolder] = Modal.useModal();
 
   const actionRef = useRef()
 
@@ -27,30 +27,13 @@ export default function Index() {
       hideInSearch: true,
     },
     {
-      title: '父级权限ID',
-      dataIndex: 'pid',
-      hideInTable: true,
-      hideInSearch: true,
-    },
-    {
       title: '名称',
       dataIndex: 'name',
       valueType: 'name',
     },
     {
-      title: '权限值',
-      dataIndex: 'value',
-      valueType: 'value',
-    },
-    {
-      title: '权限类型',
-      dataIndex: 'type',
-      valueEnum: permissionTypeEnum,
-    },
-    {
-      title: '前端资源路径',
-      dataIndex: 'uri',
-      valueType: 'uri',
+      title: '描述',
+      dataIndex: 'description',
       hideInSearch: true,
     },
     {
@@ -67,12 +50,21 @@ export default function Index() {
       title: '更新时间',
       dataIndex: 'updateTime',
       hideInSearch: true,
-    }
+    },
   ]
 
-  const clickOnDelete = (e) =>{
+  const clickOnEdit = (e) =>{
+    if (selectedRows.length === 0 || selectedRows.length > 1){
+      message.error("请选择一条记录")
+      return
+    }
+    setEditData(selectedRows[0])
+    setEditOpen(true)
+  }
+
+  const clickOnDelete = (e) => {
     if (selectedRows.length === 0){
-      message.error("请至少选择一条记录")
+      message.error("至少选择一条记录")
       return
     }
     modal.confirm({
@@ -81,14 +73,12 @@ export default function Index() {
       content: `确认删除这${selectedRows.length}条记录吗？`,
       okText: '确认',
       cancelText: '取消',
+      open: confirmOpen,
       onOk: (e) =>{
-        const ids = selectedRows.map(item => {
+        const ids = selectedRows.map((item)=>{
           return item.uuid
         })
-        const params = {
-          ids
-        }
-        return deletePermission(params).then(
+        return deleteRole({ids: ids}).then(
           value => {
             actionRef.current.reload()
             message.info(value.message)
@@ -101,12 +91,12 @@ export default function Index() {
     });
   }
 
-  const clickOnEnable = (e) =>{
+  const clickOnEnable = (e) => {
     if (selectedRows.length === 0 || selectedRows.length > 1){
       message.error("请选择一条记录")
       return
     }
-    updateStatusEnable({id: selectedRows[0].uuid}).then(
+    updateStatusEnable({uuid: selectedRows[0].uuid}).then(
       value => {
         actionRef.current.reload()
         message.info(value.message)
@@ -117,12 +107,12 @@ export default function Index() {
     )
   }
 
-  const clickOnDisAble = (e) =>{
+  const clickOnDisAble = (e) => {
     if (selectedRows.length === 0 || selectedRows.length > 1){
       message.error("请选择一条记录")
       return
     }
-    updateStatusDisAble({id: selectedRows[0].uuid}).then(
+    updateStatusDisable({uuid: selectedRows[0].uuid}).then(
       value => {
         actionRef.current.reload()
         message.info(value.message)
@@ -131,6 +121,10 @@ export default function Index() {
         message.error(reason.message)
       }
     )
+  }
+
+  const clickOnAddPermission = (e) => {
+
   }
 
   return (
@@ -142,12 +136,12 @@ export default function Index() {
             setSelectedRows(selectedRows);
           },
         }}
-        headerTitle="权限列表"
+        headerTitle="角色列表"
         columns={columns}
         request={async (
           params, sort, filter
         ) => {
-          const value = await getPermissionData(params);
+          const value = await getRoleData(params);
           return {
             data: value.data.data,
             success: value.code === '200',
@@ -157,9 +151,15 @@ export default function Index() {
         rowKey={"uuid"}
         toolBarRender={() => [
           <AddFormModal
-            key={'addPermission'}
+            key={'addRole'}
             tableActionRef={actionRef}
           />,
+          <Button
+            type={'primary'}
+            onClick={clickOnEdit}
+          >
+            修改
+          </Button>,
           <Button
             type={'primary'}
             onClick={clickOnDelete}
@@ -178,10 +178,21 @@ export default function Index() {
           >
             失效
           </Button>,
+          <Button
+            type={'primary'}
+            onClick={clickOnAddPermission}
+          >
+            授权
+          </Button>,
         ]}
+      />
+      <EditFormModal
+        tableActionRef={actionRef}
+        data={editData}
+        editOpen={editOpen}
+        setEditOpen={setEditOpen}
       />
       {contextHolder}
     </PageContainer>
   )
-
 }

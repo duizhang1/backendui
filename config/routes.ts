@@ -51,6 +51,11 @@
         path: '/systemManage/permissionManage',
         component: './SystemManage/PermissionManage'
       },
+      {
+        name: '角色管理',
+        path: '/systemManage/roleManage',
+        component: './SystemManage/RoleManage'
+      },
     ]
   },
   {

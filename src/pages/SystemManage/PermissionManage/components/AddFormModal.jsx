@@ -32,7 +32,6 @@ export default function Index(props){
       autoFocusFirstInput
       onFinish={async (values) => {
         const result = await addPermission(values)
-        console.log(result)
         if (result.code === '200'){
           message.info(result.message)
           tableActionRef.current.reload()

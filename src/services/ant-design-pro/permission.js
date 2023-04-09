@@ -1,5 +1,4 @@
 import {request} from 'umi';
-import {statusEnum} from "@/enum/enum";
 
 /** GET 获得权限列表 /api/permission/getList */
 export async function getPermissionData(params, options) {
