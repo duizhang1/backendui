@@ -4,6 +4,7 @@ import {statusEnum} from "@/enum/enum";
 import {useRef, useState} from "react";
 import AddFormModal from "@/pages/SystemManage/RoleManage/components/AddFormModal";
 import EditFormModal from "@/pages/SystemManage/RoleManage/components/EditFormModal";
+import AddPermissionFormModal from "@/pages/SystemManage/RoleManage/components/AddPermissionFormModal";
 import { Button, message, Modal } from "antd";
 import {ExclamationCircleOutlined} from "@ant-design/icons"
 import {deleteRole, getRoleData, updateStatusDisable, updateStatusEnable} from "@/services/ant-design-pro/role";
@@ -13,7 +14,8 @@ export default function Index(){
   const [selectedRows,setSelectedRows] = useState([])
   const [editOpen,setEditOpen] = useState(false)
   const [editData,setEditData] = useState({});
-
+  const [addPermissionOpen,setAddPermissionOpen] = useState(false)
+  const [roleId,setRoleId] = useState('')
 
   const [modal, contextHolder] = Modal.useModal();
 
@@ -124,7 +126,12 @@ export default function Index(){
   }
 
   const clickOnAddPermission = (e) => {
-
+    if (selectedRows.length === 0 || selectedRows.length > 1){
+      message.error("请选择一条记录")
+      return
+    }
+    setAddPermissionOpen(true)
+    setRoleId(selectedRows[0]?.uuid)
   }
 
   return (
@@ -191,6 +198,11 @@ export default function Index(){
         data={editData}
         editOpen={editOpen}
         setEditOpen={setEditOpen}
+      />
+      <AddPermissionFormModal
+        open={addPermissionOpen}
+        setOpen={setAddPermissionOpen}
+        roleId={roleId}
       />
       {contextHolder}
     </PageContainer>
