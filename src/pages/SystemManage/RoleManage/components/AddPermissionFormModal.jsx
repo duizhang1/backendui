@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, message, Modal, Tree} from "antd";
 import {getFatherPermissionTree} from "@/services/ant-design-pro/permission";
+import {addRolePermissionRelation, getRolePermissionRelation} from "@/services/ant-design-pro/role";
 
 export default function Index(props){
   const {open,setOpen,roleId} = props
@@ -8,7 +9,12 @@ export default function Index(props){
   const [treeData,setTreeData] = useState([]);
   const [checkedKeys,setCheckedKeys] = useState([]);
 
+
   useEffect(()=>{
+    setCheckedKeys([])
+    if (!roleId || roleId === ''){
+      return
+    }
     getFatherPermissionTree().then(
       value => {
         setTreeData(value.data)
@@ -17,18 +23,36 @@ export default function Index(props){
         message.error(reason.message)
       }
     )
-  })
-
-  useEffect(()=>{
-
-  },[roleId])
+    getRolePermissionRelation({roleId:roleId}).then(
+      value => {
+        const keys = value.data.map(item =>{
+          return item.permissionId
+        })
+        setCheckedKeys(keys)
+      },
+      reason => {
+        message.error(reason.message)
+      }
+    )
+  },[roleId,open])
 
   const onOk = (e) => {
+    const params = {
+      roleId: roleId,
+      permissions: checkedKeys.checked
+    }
+    addRolePermissionRelation(params).then(
+      value => {
+        message.info(value.message)
+        setOpen(false)
+      },
+      reason => {
 
+      }
+    )
   }
 
   const onCheck = (checkedKeysValue) => {
-    console.log(checkedKeysValue)
     setCheckedKeys(checkedKeysValue);
   }
 

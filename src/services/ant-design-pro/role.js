@@ -63,3 +63,25 @@ export async function updateStatusDisable(params) {
     }
   })
 }
+
+/** GET 获得角色权限 /api/rolePermissionRelation/getRolePermissionRelation */
+export async function getRolePermissionRelation(params, options) {
+  return request('/api/rolePermissionRelation/getRolePermissionRelation', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** POST 添加角色权限 /api/rolePermissionRelation/addRolePermissionRelation */
+export async function addRolePermissionRelation(params, options) {
+  return request('/api/rolePermissionRelation/addRolePermissionRelation', {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
