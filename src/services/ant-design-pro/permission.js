@@ -59,3 +59,23 @@ export async function updateStatusDisAble(params,options) {
     }
   })
 }
+
+/** GET 获得权限通过ID  /api/permission/getPermissionById */
+export async function getPermissionById(params) {
+  return request('/api/permission/getPermissionById',{
+    method: 'GET',
+    params: {
+      ...params
+    }
+  })
+}
+
+/** POST 编辑权限 /api/permission/editPermission */
+export async function editPermission(options) {
+  return request('/api/permission/editPermission',{
+    method: 'POST',
+    data: {
+      ...options
+    }
+  })
+}

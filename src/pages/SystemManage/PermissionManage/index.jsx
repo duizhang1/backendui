@@ -11,11 +11,14 @@ import {
 import {useRef} from "react";
 import {permissionTypeEnum, statusEnum} from "@/enum/enum";
 import AddFormModal from './components/AddFormModal'
+import EditFormModal from './components/EditFormModal'
 
 
 export default function Index() {
   const [modal, contextHolder] = Modal.useModal();
   const [selectedRows,setSelectedRows] = useState([])
+  const [editOpen,setEditOpen] = useState(false)
+  const [editUuid,setEditUuid] = useState('')
 
   const actionRef = useRef()
 
@@ -133,6 +136,15 @@ export default function Index() {
     )
   }
 
+  const clickOnEdit = (e) =>{
+    if (selectedRows.length === 0 || selectedRows.length > 1){
+      message.error("请选择一条记录")
+      return
+    }
+    setEditOpen(true)
+    setEditUuid(selectedRows[0].uuid)
+  }
+
   return (
     <PageContainer>
       <ProTable
@@ -162,6 +174,12 @@ export default function Index() {
           />,
           <Button
             type={'primary'}
+            onClick={clickOnEdit}
+          >
+            编辑
+          </Button>,
+          <Button
+            type={'primary'}
             onClick={clickOnDelete}
           >
             删除
@@ -181,6 +199,12 @@ export default function Index() {
         ]}
       />
       {contextHolder}
+      <EditFormModal
+        open={editOpen}
+        setOpen={setEditOpen}
+        uuid={editUuid}
+        tableActionRef={actionRef}
+        />
     </PageContainer>
   )
 
