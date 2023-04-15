@@ -85,3 +85,14 @@ export async function addRolePermissionRelation(params, options) {
     ...(options || {}),
   });
 }
+
+/** GET 获得角色权限 /api/role/getTreeList */
+export async function getTreeList(params, options) {
+  return request('/api/role/getTreeList', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}

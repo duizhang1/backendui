@@ -35,7 +35,7 @@ interface error {
 const errorHandler = (error: error) => {
   if(error.name==="BizError"){
     message.error(error.data.message)
-    return error.data;
+    throw error.data;
   }
   const { response } = error;
   const errortext = codeMessage[response.status] || response.statusText;

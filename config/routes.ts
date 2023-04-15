@@ -56,6 +56,11 @@
         path: '/systemManage/roleManage',
         component: './SystemManage/RoleManage'
       },
+      {
+        name: '用户管理',
+        path: '/systemManage/adminManage',
+        component: './SystemManage/AdminManage'
+      },
     ]
   },
   {
