@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, message, Modal, Tree} from "antd";
-import {getFatherPermissionTree} from "@/services/ant-design-pro/permission";
+import { getPermissionTree} from "@/services/ant-design-pro/permission";
 import {addRolePermissionRelation, getRolePermissionRelation} from "@/services/ant-design-pro/role";
 
 export default function Index(props){
@@ -15,12 +15,9 @@ export default function Index(props){
     if (!roleId || roleId === ''){
       return
     }
-    getFatherPermissionTree().then(
+    getPermissionTree().then(
       value => {
         setTreeData(value.data)
-      },
-      reason => {
-        message.error(reason.message)
       }
     )
     getRolePermissionRelation({roleId:roleId}).then(
@@ -45,9 +42,6 @@ export default function Index(props){
       value => {
         message.info(value.message)
         setOpen(false)
-      },
-      reason => {
-
       }
     )
   }

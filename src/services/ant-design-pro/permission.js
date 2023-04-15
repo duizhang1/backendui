@@ -79,3 +79,13 @@ export async function editPermission(options) {
     }
   })
 }
+
+/** GET 获得tree的权限列表  /api/permission/getPermissionTree */
+export async function getPermissionTree(params) {
+  return request('/api/permission/getPermissionTree',{
+    method: 'GET',
+    params: {
+      ...params
+    }
+  })
+}

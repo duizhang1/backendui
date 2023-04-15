@@ -86,7 +86,7 @@ export default function Index(){
             message.info(value.message)
           },
           reason => {
-            message.error(reason.message)
+
           }
         )
       }
@@ -104,7 +104,7 @@ export default function Index(){
         message.info(value.message)
       },
       reason => {
-        message.error(reason.message)
+
       }
     )
   }
@@ -120,7 +120,7 @@ export default function Index(){
         message.info(value.message)
       },
       reason => {
-        message.error(reason.message)
+
       }
     )
   }
