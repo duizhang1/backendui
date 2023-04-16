@@ -43,6 +43,22 @@
     component: './TableList',
   },
   {
+    name: '标签分类管理',
+    path: '/labelSortManage',
+    routes: [
+      {
+        name: '标签管理',
+        path: '/labelSortManage/labelManage',
+        component: './LabelManage/LabelManage'
+      },
+      {
+        name: '分区管理',
+        path: '/labelSortManage/sortManage',
+        component: './LabelManage/SortManage'
+      }
+    ]
+  },
+  {
     name: '系统管理',
     path: '/systemManage',
     routes: [
