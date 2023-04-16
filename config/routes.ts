@@ -43,6 +43,11 @@
     component: './TableList',
   },
   {
+    name: '用户管理',
+    path: '/userManage',
+    component: './NNUserManage'
+  },
+  {
     name: '标签分类管理',
     path: '/labelSortManage',
     routes: [
@@ -73,7 +78,7 @@
         component: './SystemManage/RoleManage'
       },
       {
-        name: '用户管理',
+        name: '管理员管理',
         path: '/systemManage/adminManage',
         component: './SystemManage/AdminManage'
       },
