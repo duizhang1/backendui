@@ -90,6 +90,7 @@ export default function Index(){
     deleteAdmin(params).then(
       value => {
         message.info(value.message)
+        actionRef.current.clearSelected()
         actionRef.current.reload()
       }
     )

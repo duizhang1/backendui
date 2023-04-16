@@ -55,6 +55,7 @@ export default function Index(props){
         if (result.code === '200'){
           message.info(result.message)
           tableActionRef.current.reload()
+          tableActionRef.current.clearSelected()
           form.resetFields()
           setOpen(false)
         }

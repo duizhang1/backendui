@@ -83,6 +83,7 @@ export default function Index(){
         return deleteRole({ids: ids}).then(
           value => {
             actionRef.current.reload()
+            actionRef.current.clearSelected()
             message.info(value.message)
           },
           reason => {
