@@ -3,7 +3,6 @@ import {PageContainer, ProTable} from "@ant-design/pro-components";
 import {Button, Modal, Image} from "antd";
 import {useRef, useState} from "react";
 import {getList} from "@/services/ant-design-pro/article";
-import ArticleContentModal from '@/components/Modal/ArticleContentModal'
 import {history} from "umi";
 
 export default function Index(){

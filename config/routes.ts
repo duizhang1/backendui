@@ -55,6 +55,11 @@
         name: '文章查看',
         path: '/articleManage/articleList',
         component: './ArticleManage/ArticleList'
+      },
+      {
+        name: '文章审核',
+        path: '/articleManage/articleList',
+        component: './ArticleManage/ArticleList'
       }
     ]
   },
