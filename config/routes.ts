@@ -48,6 +48,21 @@
     component: './NNUserManage'
   },
   {
+    name: '文章管理',
+    path: '/articleManage',
+    routes: [
+      {
+        name: '文章查看',
+        path: '/articleManage/articleList',
+        component: './ArticleManage/ArticleList'
+      }
+    ]
+  },
+  {
+    path: '/articleInfo',
+    component: './ArticleManage/ArticleInfo'
+  },
+  {
     name: '标签分类管理',
     path: '/labelSortManage',
     routes: [
