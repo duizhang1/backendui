@@ -58,8 +58,8 @@
       },
       {
         name: '文章审核',
-        path: '/articleManage/articleList',
-        component: './ArticleManage/ArticleList'
+        path: '/articleManage/articleReview',
+        component: './ArticleManage/ArticleReview'
       }
     ]
   },

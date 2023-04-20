@@ -20,3 +20,14 @@ export async function editUser(params, options) {
     },
   });
 }
+
+/** GET 获得用户 /api/user/getUserById */
+export async function getUserById(params, options) {
+  return request('/api/user/getUserById', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
