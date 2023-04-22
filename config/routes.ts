@@ -69,6 +69,11 @@
     ]
   },
   {
+    name: '评论管理',
+    path: '/commentManage',
+    component: './CommentManage'
+  },
+  {
     path: '/articleInfo',
     component: './ArticleManage/ArticleInfo'
   },
