@@ -1,6 +1,6 @@
 import React from "react";
 import {PageContainer,ProTable} from "@ant-design/pro-components";
-import {getCommentPage} from "@/services/ant-design-pro/articleComment";
+import {deleteArticleComment, getCommentPage} from "@/services/ant-design-pro/articleComment";
 import {useRef, useState} from "react";
 import {Avatar, Button, message, Modal} from "antd";
 import {ExclamationCircleOutlined} from "@ant-design/icons";
@@ -55,8 +55,8 @@ export default function Index(){
   ]
 
   const clickOnDelete = (e) =>{
-    if (selectedRows.length === 0){
-      message.error("请至少选择一条记录")
+    if (selectedRows.length !== 1){
+      message.error("请选择一条记录")
       return
     }
     modal.confirm({
@@ -66,13 +66,10 @@ export default function Index(){
       okText: '确认',
       cancelText: '取消',
       onOk: (e) =>{
-        const ids = selectedRows.map(item => {
-          return item.uuid
-        })
         const params = {
-          ids
+          commentId: selectedRows[0].uuid
         }
-        return deletePermission(params).then(
+        return deleteArticleComment(params).then(
           value => {
             actionRef.current.reload()
             actionRef.current.clearSelected()
