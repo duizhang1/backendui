@@ -52,3 +52,14 @@ export async function articleReviewFailed(params) {
     },
   })
 }
+
+/**  GET 获得管理员审核文章 /api/article/getAdminReviewed   */
+export async function getAdminReviewed(params,options) {
+  return request('/api/article/getAdminReviewed',{
+    method: 'GET',
+    params: {
+      ...params
+    },
+    ...(options || {}),
+  })
+}

@@ -15,3 +15,10 @@ export const sexEnum = {
   1: {text: '男'},
   2: {text: '女'},
 }
+
+export const approveStateEnum = {
+  0: {text: '未审核'},
+  1: {text: '审核中'},
+  2: {text: '审核通过'},
+  3: {text: '审核拒绝'},
+}

@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {Affix, PageHeader} from "antd";
+import {Affix, PageHeader,Button} from "antd";
 import MarkDownCom from "@/components/MarkDown/MarkDownCom";
 import MarkDownNavCard from "@/components/MarkDown/MarkDownNavCard";
 import {getArticleInfo} from "@/services/ant-design-pro/article";
 import {history} from "umi";
+import BackModalForm from './components/BackModalForm'
 
 export default function Index(props) {
   const [data, setData] = useState({})
@@ -27,6 +28,9 @@ export default function Index(props) {
         style={{
           marginTop: '-30px'
         }}
+        extra={[
+          <BackModalForm key={'1'} articleId={props.location.query.id} doAfter={()=>{}}/>,
+        ]}
       />
       <div style={{
         display: 'flex',

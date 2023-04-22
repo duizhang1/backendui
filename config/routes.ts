@@ -60,7 +60,12 @@
         name: '文章审核',
         path: '/articleManage/articleReview',
         component: './ArticleManage/ArticleReview'
-      }
+      },
+      {
+        name: '审核查看',
+        path: '/articleManage/articleOperation',
+        component: './ArticleManage/ArticleOperation'
+      },
     ]
   },
   {
