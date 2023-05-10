@@ -15,8 +15,7 @@
   },
   {
     path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
+    name: '首页',
     component: './Welcome',
   },
   {
@@ -35,12 +34,6 @@
         component: './404',
       },
     ],
-  },
-  {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
   },
   {
     name: '用户管理',
@@ -78,7 +71,7 @@
     component: './ArticleManage/ArticleInfo'
   },
   {
-    name: '标签分类管理',
+    name: '标签分区管理',
     path: '/labelSortManage',
     routes: [
       {
