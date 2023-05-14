@@ -89,3 +89,13 @@ export async function getPermissionTree(params) {
     }
   })
 }
+
+/** GET 获得用户的权限列表  /api/permission/getUserPermission */
+export async function getUserPermission(params) {
+  return request('/api/permission/getUserPermission',{
+    method: 'GET',
+    params: {
+      ...params
+    }
+  })
+}

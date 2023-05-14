@@ -6,10 +6,12 @@ import AddFormModal from "@/pages/LabelManage/LabelManage/components/AddFormModa
 import {Button, message, Modal} from "antd";
 import EditFormModal from "@/pages/LabelManage/LabelManage/components/EditFormModal"
 import {ExclamationCircleOutlined} from "@ant-design/icons";
-import {deletePermission} from "@/services/ant-design-pro/permission";
+import {Access} from "@@/plugin-access/access";
+import {useAccess} from "umi";
+import AccessButton from '@/components/Button/AccessButton'
 
 export default function Index(){
-
+  const access = useAccess()
   const actionRef = useRef()
 
   const [selectedRows,setSelectedRows] = useState([])
@@ -97,22 +99,25 @@ export default function Index(){
         }}
         rowKey={"uuid"}
         toolBarRender={() => [
-          <AddFormModal
-            key={'addLabel'}
-            tableActionRef={actionRef}
-          />,
-          <Button
+          <Access accessible={access.addLabel}>
+            <AddFormModal
+              tableActionRef={actionRef}
+            />
+          </Access>,
+          <AccessButton
+            access={access.editLabel}
             type={'primary'}
             onClick={clickOnEdit}
           >
             修改
-          </Button>,
-          <Button
+          </AccessButton>,
+          <AccessButton
+            access={access.deleteLabel}
             type={'primary'}
             onClick={clickOnDelete}
           >
             删除
-          </Button>,
+          </AccessButton>,
         ]}
       />
       <EditFormModal

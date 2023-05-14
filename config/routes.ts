@@ -19,23 +19,6 @@
     component: './Welcome',
   },
   {
-    path: '/admin',
-    name: 'admin',
-    icon: 'crown',
-    access: 'canAdmin',
-    routes: [
-      {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        icon: 'smile',
-        component: './Welcome',
-      },
-      {
-        component: './404',
-      },
-    ],
-  },
-  {
     name: '用户管理',
     path: '/userManage',
     component: './NNUserManage'
@@ -77,12 +60,14 @@
       {
         name: '标签管理',
         path: '/labelSortManage/labelManage',
-        component: './LabelManage/LabelManage'
+        component: './LabelManage/LabelManage',
+        access: 'labelManage',
       },
       {
         name: '分区管理',
         path: '/labelSortManage/sortManage',
-        component: './LabelManage/SortManage'
+        component: './LabelManage/SortManage',
+        access: 'sortManage'
       }
     ]
   },

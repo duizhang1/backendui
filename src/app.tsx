@@ -10,8 +10,9 @@ import type {RequestConfig} from "@@/plugin-request/request";
 import errorHandler from "@/util/requestUtils/errorHandle";
 import {getCurrentAdmin} from "@/services/ant-design-pro/admin";
 import {authHeaderInterceptor} from "@/util/requestUtils/authHeadInceptor";
+import {getUserPermission} from "@/services/ant-design-pro/permission";
 
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = process.env.NODE_ENV === 'test';
 const loginPath = '/user/login';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
@@ -28,6 +29,7 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   loading?: boolean;
   fetchUserInfo?: () => Promise<any>;
+  permissionList?: any;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -38,16 +40,26 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
+  const fetchUserPermission = async () => {
+    try{
+      const result = await getUserPermission();
+      return result.data;
+    } catch (error) {
+
+    }
+  }
   const token = localStorage.getItem('token');
   if (token != null && token.length > 0){
     const currentUser = await fetchUserInfo();
     if (history.location.pathname === loginPath){
       history.push('/welcome')
     }
+    const permissionList = await fetchUserPermission();
     return {
       fetchUserInfo,
       currentUser,
       settings: defaultSettings,
+      permissionList
     };
   } else {
     if (history.location.pathname !== loginPath){
@@ -77,7 +89,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         history.push(loginPath);
       }
     },
-    links: false
+    links: isDev
       ? [
           <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
             <LinkOutlined />
